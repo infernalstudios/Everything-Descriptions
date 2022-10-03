@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[41,)"
+loaderVersion="[38,)"
 license="MIT License"
 
 [[mods]]
@@ -12,10 +12,10 @@ authors="Kuraion"
 logoFile="logo.png"
 description=''''''
 
-[[dependencies.enchantment_lore_forge]]
+[[dependencies.everydesc]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19,]"
+    versionRange="[1.18,]"
     ordering="NONE"
     side="BOTH"
 

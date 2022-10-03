@@ -5,8 +5,8 @@ import net.minecraft.client.StringSplitter;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.infernalstudios.everydesc.gui.DescriptionsViewScreen;
 import org.infernalstudios.everydesc.util.KeyMappings;
@@ -24,10 +25,11 @@ import java.util.List;
 
 import static org.infernalstudios.everydesc.EverythingDescriptions.LINES_PER_PAGE;
 
-@Mod.EventBusSubscriber(modid = EverythingDescriptions.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = EverythingDescriptions.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class DescriptionInteraction {
+
     @SubscribeEvent
-    public static void onKeyInput(InputEvent.Key event) {
+    public static void onKeyInput(InputEvent.KeyInputEvent event) {
         if (KeyMappings.DESCRIPTION_KEY.consumeClick()) {
             Player player = Minecraft.getInstance().player;
 
@@ -43,21 +45,19 @@ public class DescriptionInteraction {
             boolean translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idString);
             if (!translated) translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idStringOff);
             if (!translated) {
-                event.setCanceled(true);
                 return;
             }
 
             dummyStack.addTagElement("pages", pages);
             final DescriptionsViewScreen screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack));
             Minecraft.getInstance().setScreen(screen);
-
-            event.setCanceled(true);
         }
+        else return;
     }
 
     private static boolean addTranslatedPages(ListTag nbtList, String loreKey) {
         if (I18n.exists(loreKey)) {
-            String translatedLore = Component.translatable(loreKey).getString();
+            String translatedLore = new TranslatableComponent(loreKey).getString();
             if (!translatedLore.isEmpty()) {
                 nbtList.addAll(SplitToPageTags(translatedLore));
                 return true;

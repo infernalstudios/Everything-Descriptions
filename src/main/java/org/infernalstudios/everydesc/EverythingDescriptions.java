@@ -2,10 +2,10 @@ package org.infernalstudios.everydesc;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.infernalstudios.everydesc.util.KeyMappings;
 
 @Mod("everydesc")
@@ -20,11 +20,11 @@ public class EverythingDescriptions {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class ClientModBusEvents {
+    @Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class ClientProxy {
         @SubscribeEvent
-        public static void onKeyRegister(RegisterKeyMappingsEvent event) {
-            event.register(KeyMappings.DESCRIPTION_KEY);
+        public static void clientSetup(FMLClientSetupEvent event) {
+            KeyMappings.registerKeys();
         }
     }
 }

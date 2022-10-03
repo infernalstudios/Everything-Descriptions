@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
@@ -54,7 +54,7 @@ public class DescriptionsViewScreen extends Screen {
     /** Holds a copy of the page text, split into page width lines */
     private List<FormattedCharSequence> cachedPageComponents = Collections.emptyList();
     private int cachedPage = -1;
-    private Component pageMsg = CommonComponents.EMPTY;
+    private Component pageMsg = TextComponent.EMPTY;
     private PageButton forwardButton;
     private PageButton backButton;
     /** Determines if a sound is played when the page is turned */
@@ -69,7 +69,7 @@ public class DescriptionsViewScreen extends Screen {
     }
 
     private DescriptionsViewScreen(DescriptionsViewScreen.BookAccess pBookAccess, boolean pPlayTurnSound) {
-        super(GameNarrator.NO_TITLE);
+        super(NarratorChatListener.NO_TITLE);
         this.bookAccess = pBookAccess;
         this.playTurnSound = pPlayTurnSound;
     }
@@ -82,7 +82,7 @@ public class DescriptionsViewScreen extends Screen {
     }
 
     /**
-     * Moves the book to the specified page and returns true if it exists, {@code false} otherwise.
+     * Moves the book to the specified page and returns true if it exists, false otherwise
      */
     public boolean setPage(int pPageNum) {
         int i = Mth.clamp(pPageNum, 0, this.bookAccess.getPageCount() - 1);
@@ -97,7 +97,7 @@ public class DescriptionsViewScreen extends Screen {
     }
 
     /**
-     * I'm not sure why this exists. The function it calls is public and does all the work.
+     * I'm not sure why this exists. The function it calls is public and does all of the work
      */
     protected boolean forcePage(int pPageNum) {
         return this.setPage(pPageNum);
@@ -161,7 +161,7 @@ public class DescriptionsViewScreen extends Screen {
         if (super.keyPressed(pKeyCode, pScanCode, pModifiers)) {
             return true;
         } else {
-            switch (pKeyCode) {
+            switch(pKeyCode) {
                 case 266:
                     this.backButton.onPress();
                     return true;
@@ -185,7 +185,7 @@ public class DescriptionsViewScreen extends Screen {
         if (this.cachedPage != this.currentPage) {
             FormattedText formattedtext = this.bookAccess.getPage(this.currentPage);
             this.cachedPageComponents = this.font.split(formattedtext, 114);
-            this.pageMsg = Component.translatable("book.pageIndicator", this.currentPage + 1, Math.max(this.getNumPages(), 1));
+            this.pageMsg = new TranslatableComponent("book.pageIndicator", this.currentPage + 1, Math.max(this.getNumPages(), 1));
         }
 
         this.cachedPage = this.currentPage;
@@ -352,7 +352,7 @@ public class DescriptionsViewScreen extends Screen {
 
         private static List<String> readPages(ItemStack pWrittenBookStack) {
             CompoundTag compoundtag = pWrittenBookStack.getTag();
-            return (List<String>)(compoundtag != null && WrittenBookItem.makeSureTagIsValid(compoundtag) ? DescriptionsViewScreen.loadPages(compoundtag) : ImmutableList.of(Component.Serializer.toJson(Component.translatable("book.invalid.tag").withStyle(ChatFormatting.DARK_RED))));
+            return (List<String>)(compoundtag != null && WrittenBookItem.makeSureTagIsValid(compoundtag) ? DescriptionsViewScreen.loadPages(compoundtag) : ImmutableList.of(Component.Serializer.toJson((new TranslatableComponent("book.invalid.tag")).withStyle(ChatFormatting.DARK_RED))));
         }
 
         /**
