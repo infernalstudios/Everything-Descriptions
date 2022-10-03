@@ -1,5 +1,6 @@
 {
   "key.everydesc.description": "Show Item Description",
+  "everydesc.tooltip": "Press §a[%s§a]§r while holding this to learn more!",
 
   "everydesc.minecraft:obsidian": "When at least 10 blocks of Obsidian are placed in a frame-like shape and the inside is lit with fire, a portal to another dimension is opened...",
   "everydesc.minecraft:obsidian.bg": "minecraft/obsidian.png",
