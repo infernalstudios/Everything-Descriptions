@@ -12,7 +12,7 @@ authors="Kuraion"
 logoFile="logo.png"
 description=''''''
 
-[[dependencies.enchantment_lore_forge]]
+[[dependencies.everydesc]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.19,]"
