@@ -7,6 +7,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -43,13 +44,26 @@ public class DescriptionInteraction {
             String idStringOff = ForgeRegistries.ITEMS.getKey(player.getOffhandItem().getItem()).toString();
 
             boolean translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idString);
-            if (!translated) translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idStringOff);
+            String[] idStringArr = idString.split(":");
+
             if (!translated) {
+                translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idStringOff);
+                idStringArr = idStringOff.split(":");
+            }
+            if (!translated) {
+                event.setCanceled(true);
                 return;
             }
 
             dummyStack.addTagElement("pages", pages);
-            final DescriptionsViewScreen screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack));
+
+            DescriptionsViewScreen screen = null;
+            String bgKey = "everydesc." + idStringArr[0] + ":" + idStringArr[1] + ".bg";
+            if(I18n.exists(bgKey)) {
+                screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack), new ResourceLocation("everydesc:textures/gui/" + new TranslatableComponent(bgKey).getString()));
+            }
+            else screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack), new ResourceLocation("everydesc:textures/gui/book.png"));
+
             Minecraft.getInstance().setScreen(screen);
         }
         else return;
