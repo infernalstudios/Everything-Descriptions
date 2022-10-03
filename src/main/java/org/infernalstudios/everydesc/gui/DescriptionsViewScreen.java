@@ -44,7 +44,8 @@ public class DescriptionsViewScreen extends Screen {
             return FormattedText.EMPTY;
         }
     };
-    public static final ResourceLocation BOOK_LOCATION = new ResourceLocation("everydesc:textures/gui/book.png");
+    public ResourceLocation BOOK_LOCATION = new ResourceLocation("everydesc:textures/gui/book.png");
+
     protected static final int TEXT_WIDTH = 114;
     protected static final int TEXT_HEIGHT = 128;
     protected static final int IMAGE_WIDTH = 192;
@@ -61,17 +62,22 @@ public class DescriptionsViewScreen extends Screen {
     private final boolean playTurnSound;
 
     public DescriptionsViewScreen(DescriptionsViewScreen.BookAccess pBookAccess) {
-        this(pBookAccess, true);
+        this(pBookAccess, true, new ResourceLocation("everydesc:textures/gui/book.png"));
     }
 
     public DescriptionsViewScreen() {
-        this(EMPTY_ACCESS, false);
+        this(EMPTY_ACCESS, false, new ResourceLocation("everydesc:textures/gui/book.png"));
     }
 
-    private DescriptionsViewScreen(DescriptionsViewScreen.BookAccess pBookAccess, boolean pPlayTurnSound) {
+    public DescriptionsViewScreen(DescriptionsViewScreen.BookAccess pBookAccess, boolean pPlayTurnSound, ResourceLocation location) {
         super(GameNarrator.NO_TITLE);
         this.bookAccess = pBookAccess;
         this.playTurnSound = pPlayTurnSound;
+        this.BOOK_LOCATION = location;
+    }
+
+    public DescriptionsViewScreen(DescriptionsViewScreen.BookAccess pBookAccess, ResourceLocation location) {
+        this(pBookAccess, true, location);
     }
 
     public void setBookAccess(DescriptionsViewScreen.BookAccess pBookAccess) {

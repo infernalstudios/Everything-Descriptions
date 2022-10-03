@@ -1,12 +1,16 @@
 package org.infernalstudios.everydesc;
 
+import cpw.mods.modlauncher.api.ITransformationService;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,6 +22,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.infernalstudios.everydesc.gui.DescriptionsViewScreen;
 import org.infernalstudios.everydesc.util.KeyMappings;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,14 +46,26 @@ public class DescriptionInteraction {
             String idStringOff = ForgeRegistries.ITEMS.getKey(player.getOffhandItem().getItem()).toString();
 
             boolean translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idString);
-            if (!translated) translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idStringOff);
+            String[] idStringArr = idString.split(":");
+
+            if (!translated) {
+                translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idStringOff);
+                idStringArr = idStringOff.split(":");
+            }
             if (!translated) {
                 event.setCanceled(true);
                 return;
             }
 
             dummyStack.addTagElement("pages", pages);
-            final DescriptionsViewScreen screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack));
+            DescriptionsViewScreen screen = null;
+            String bgKey = "everydesc." + idStringArr[0] + ":" + idStringArr[1] + ".bg";
+            if(I18n.exists(bgKey)) {
+                screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack), new ResourceLocation("everydesc:textures/gui/" + Component.translatable(bgKey).getString()));
+            }
+            else screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack), new ResourceLocation("everydesc:textures/gui/book.png"));
+
+
             Minecraft.getInstance().setScreen(screen);
 
             event.setCanceled(true);
