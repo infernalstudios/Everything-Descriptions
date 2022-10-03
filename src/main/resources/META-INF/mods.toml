@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[41,)"
+license="MIT License"
+
+[[mods]]
+modId="everydesc"
+version="0.0"
+displayName="Everything Descriptions"
+credits=""
+displayURL="https://www.curseforge.com/minecraft/mc-mods/everything-descriptions"
+authors="Kuraion"
+logoFile="logo.png"
+description=''''''
+
+[[dependencies.enchantment_lore_forge]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19,]"
+    ordering="NONE"
+    side="BOTH"
+
+
+
+
