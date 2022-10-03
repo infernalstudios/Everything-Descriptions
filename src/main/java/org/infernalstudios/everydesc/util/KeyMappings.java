@@ -1,8 +1,9 @@
-package org.infernalstudios.everydesc;
+package org.infernalstudios.everydesc.util;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.settings.KeyConflictContext;
+import org.infernalstudios.everydesc.EverythingDescriptions;
 import org.lwjgl.glfw.GLFW;
 
 public final class KeyMappings {
