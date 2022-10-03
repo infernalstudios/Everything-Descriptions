@@ -51,7 +51,6 @@ public class DescriptionInteraction {
                 idStringArr = idStringOff.split(":");
             }
             if (!translated) {
-                event.setCanceled(true);
                 return;
             }
 

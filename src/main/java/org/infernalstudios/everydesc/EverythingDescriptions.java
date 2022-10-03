@@ -6,6 +6,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.infernalstudios.everydesc.gui.TooltipEvent;
 import org.infernalstudios.everydesc.util.KeyMappings;
 
 @Mod("everydesc")
@@ -26,5 +27,9 @@ public class EverythingDescriptions {
         public static void clientSetup(FMLClientSetupEvent event) {
             KeyMappings.registerKeys();
         }
+    }
+
+    public static void init(FMLClientSetupEvent event) {
+        MinecraftForge.EVENT_BUS.addListener(TooltipEvent::onItemTooltip);
     }
 }
