@@ -8,7 +8,9 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,26 +44,57 @@ public class DescriptionInteraction {
 
             String idString = ForgeRegistries.ITEMS.getKey(player.getMainHandItem().getItem()).toString();
             String idStringOff = ForgeRegistries.ITEMS.getKey(player.getOffhandItem().getItem()).toString();
+            String loreKey = "";
 
             boolean translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idString);
-            String[] idStringArr = idString.split(":");
-
-            if (!translated) {
+            if (translated) loreKey = idString;
+            else {
                 translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idStringOff);
-                idStringArr = idStringOff.split(":");
+                if (translated) loreKey = idStringOff;
+                else {
+                    List<TagKey<Item>> tags = player.getMainHandItem().getTags().toList();
+                    List<TagKey<Item>> tagsOff = player.getOffhandItem().getTags().toList();
+
+                    String[] dummyArr1;
+                    String[] dummyArr2;
+
+                    for (TagKey<Item> t:tags
+                    ) {
+                        dummyArr1 = t.toString().split(" / ");
+                        dummyArr2 = dummyArr1[1].split("]");
+                        if(I18n.exists(EverythingDescriptions.MOD_ID + "." + dummyArr2[0] + ".tag")) {
+                            loreKey = dummyArr2[0] + ".tag";
+                            translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + loreKey);
+                            break;
+                        }
+                    }
+
+                    if (loreKey.equals("")) {
+                        for (TagKey<Item> t:tagsOff
+                        ) {
+                            dummyArr1 = t.toString().split(" / ");
+                            dummyArr2 = dummyArr1[1].split("]");
+                            if(I18n.exists(EverythingDescriptions.MOD_ID + "." + dummyArr2[0] + ".tag")) {
+                                loreKey = dummyArr2[0] + ".tag";
+                                translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + loreKey);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
-            if (!translated) {
+            if (loreKey.equals("")) {
                 return;
             }
 
             dummyStack.addTagElement("pages", pages);
-
             DescriptionsViewScreen screen = null;
-            String bgKey = "everydesc." + idStringArr[0] + ":" + idStringArr[1] + ".bg";
+            String bgKey = EverythingDescriptions.MOD_ID + "." + loreKey + ".bg";
             if(I18n.exists(bgKey)) {
-                screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack), new ResourceLocation("everydesc:textures/gui/" + new TranslatableComponent(bgKey).getString()));
+                screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack), new ResourceLocation(EverythingDescriptions.MOD_ID + ":textures/gui/" + new TranslatableComponent(bgKey).getString()));
             }
-            else screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack), new ResourceLocation("everydesc:textures/gui/book.png"));
+            else screen = new DescriptionsViewScreen(new DescriptionsViewScreen.WrittenBookAccess(dummyStack), new ResourceLocation(EverythingDescriptions.MOD_ID + ":textures/gui/book.png"));
+
 
             Minecraft.getInstance().setScreen(screen);
         }

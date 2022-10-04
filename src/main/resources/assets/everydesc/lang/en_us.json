@@ -5,5 +5,7 @@
   "everydesc.minecraft:obsidian": "When at least 10 blocks of Obsidian are placed in a frame-like shape and the inside is lit with fire, a portal to another dimension is opened...",
   "everydesc.minecraft:obsidian.bg": "minecraft/obsidian.png",
   "everydesc.minecraft:ender_pearl": "Marble-like pearls that can be throw to teleport you, dealing some damage in the process. I wonder if they could be used for interdimensional travel, given the right fuel source?",
-  "everydesc.minecraft:ender_eye": "When thrown, the Eyes of Ender will seek out the long forgotten Strongholds. They have a chance to break when thrown, and 12 are required to finish what was started long ago, so be sure to stock up on them."
+  "everydesc.minecraft:ender_eye": "When thrown, the Eyes of Ender will seek out the long forgotten Strongholds. They have a chance to break when thrown, and 12 are required to finish what was started long ago, so be sure to stock up on them.",
+
+  "everydesc.forge:ores.tag": "this is a description for the forge:ores tag"
 }
