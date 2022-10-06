@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,40 +45,66 @@ public class DescriptionInteraction {
 
             String idString = ForgeRegistries.ITEMS.getKey(player.getMainHandItem().getItem()).toString();
             String idStringOff = ForgeRegistries.ITEMS.getKey(player.getOffhandItem().getItem()).toString();
+            String idStringLook = ForgeRegistries.BLOCKS.getKey(Minecraft.getInstance().level.getBlockState(((BlockHitResult) Minecraft.getInstance().hitResult).getBlockPos()).getBlock()).toString();
             String loreKey = "";
+            boolean translated = false;
 
-            boolean translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idString);
-            if (translated) loreKey = idString;
+            if (idString.equals("minecraft:air") && idStringOff.equals("minecraft:air") && idStringLook.equals("minecraft:air")) {
+                translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + ".credits");
+                loreKey = "credits";
+            }
             else {
-                translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idStringOff);
-                if (translated) loreKey = idStringOff;
+                translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idString);
+                if (translated) loreKey = idString;
                 else {
-                    List<TagKey<Item>> tags = player.getMainHandItem().getTags().toList();
-                    List<TagKey<Item>> tagsOff = player.getOffhandItem().getTags().toList();
+                    translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idStringOff);
+                    if (translated) loreKey = idStringOff;
+                    else {
+                        translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + idStringLook);
+                        if (translated) loreKey = idStringLook;
+                        else {
+                            List<TagKey<Item>> tags = player.getMainHandItem().getTags().toList();
+                            List<TagKey<Item>> tagsOff = player.getOffhandItem().getTags().toList();
+                            List<TagKey<Item>> tagsLook = Minecraft.getInstance().level.getBlockState(((BlockHitResult) Minecraft.getInstance().hitResult).getBlockPos()).getBlock().asItem().getDefaultInstance().getTags().toList();
 
-                    String[] dummyArr1;
-                    String[] dummyArr2;
+                            String[] dummyArr1;
+                            String[] dummyArr2;
 
-                    for (TagKey<Item> t:tags
-                    ) {
-                        dummyArr1 = t.toString().split(" / ");
-                        dummyArr2 = dummyArr1[1].split("]");
-                        if(I18n.exists(EverythingDescriptions.MOD_ID + "." + dummyArr2[0] + ".tag")) {
-                            loreKey = dummyArr2[0] + ".tag";
-                            translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + loreKey);
-                            break;
-                        }
-                    }
+                            for (TagKey<Item> t : tags
+                            ) {
+                                dummyArr1 = t.toString().split(" / ");
+                                dummyArr2 = dummyArr1[1].split("]");
+                                if (I18n.exists(EverythingDescriptions.MOD_ID + "." + dummyArr2[0] + ".tag")) {
+                                    loreKey = dummyArr2[0] + ".tag";
+                                    translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + loreKey);
+                                    break;
+                                }
+                            }
 
-                    if (loreKey.equals("")) {
-                        for (TagKey<Item> t:tagsOff
-                        ) {
-                            dummyArr1 = t.toString().split(" / ");
-                            dummyArr2 = dummyArr1[1].split("]");
-                            if(I18n.exists(EverythingDescriptions.MOD_ID + "." + dummyArr2[0] + ".tag")) {
-                                loreKey = dummyArr2[0] + ".tag";
-                                translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + loreKey);
-                                break;
+                            if (loreKey.equals("")) {
+                                for (TagKey<Item> t : tagsOff
+                                ) {
+                                    dummyArr1 = t.toString().split(" / ");
+                                    dummyArr2 = dummyArr1[1].split("]");
+                                    if (I18n.exists(EverythingDescriptions.MOD_ID + "." + dummyArr2[0] + ".tag")) {
+                                        loreKey = dummyArr2[0] + ".tag";
+                                        translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + loreKey);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (loreKey.equals("")) {
+                                for (TagKey<Item> t : tagsLook
+                                ) {
+                                    dummyArr1 = t.toString().split(" / ");
+                                    dummyArr2 = dummyArr1[1].split("]");
+                                    if (I18n.exists(EverythingDescriptions.MOD_ID + "." + dummyArr2[0] + ".tag")) {
+                                        loreKey = dummyArr2[0] + ".tag";
+                                        translated = addTranslatedPages(pages, EverythingDescriptions.MOD_ID + "." + loreKey);
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
