@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,6 +23,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.infernalstudios.everydesc.gui.DescriptionsViewScreen;
 import org.infernalstudios.everydesc.util.KeyMappings;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,7 +45,14 @@ public class DescriptionInteraction {
 
             String idString = ForgeRegistries.ITEMS.getKey(player.getMainHandItem().getItem()).toString();
             String idStringOff = ForgeRegistries.ITEMS.getKey(player.getOffhandItem().getItem()).toString();
-            String idStringLook = ForgeRegistries.BLOCKS.getKey(Minecraft.getInstance().level.getBlockState(((BlockHitResult) Minecraft.getInstance().hitResult).getBlockPos()).getBlock()).toString();
+            String idStringLook = "minecraft:air";
+
+            if (Minecraft.getInstance().hitResult instanceof BlockHitResult) {
+                idStringLook = ForgeRegistries.BLOCKS.getKey(Minecraft.getInstance().level.getBlockState(((BlockHitResult) Minecraft.getInstance().hitResult).getBlockPos()).getBlock()).toString();
+            } else if (Minecraft.getInstance().hitResult instanceof EntityHitResult) {
+                idStringLook = ForgeRegistries.ENTITY_TYPES.getKey(((EntityHitResult) Minecraft.getInstance().hitResult).getEntity().getType()).toString();
+            }
+
             String loreKey = "";
             boolean translated = false;
 
@@ -63,7 +72,8 @@ public class DescriptionInteraction {
                         else{
                             List<TagKey<Item>> tags = player.getMainHandItem().getTags().toList();
                             List<TagKey<Item>> tagsOff = player.getOffhandItem().getTags().toList();
-                            List<TagKey<Item>> tagsLook = Minecraft.getInstance().level.getBlockState(((BlockHitResult) Minecraft.getInstance().hitResult).getBlockPos()).getBlock().asItem().getDefaultInstance().getTags().toList();
+                            List<TagKey<Item>> tagsLook = new ArrayList<>();
+                            if (Minecraft.getInstance().hitResult instanceof BlockHitResult) tagsLook = Minecraft.getInstance().level.getBlockState(((BlockHitResult) Minecraft.getInstance().hitResult).getBlockPos()).getBlock().asItem().getDefaultInstance().getTags().toList();
 
                             String[] dummyArr1;
                             String[] dummyArr2;
