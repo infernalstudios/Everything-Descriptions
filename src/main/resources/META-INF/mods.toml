@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[38,)"
+loaderVersion="[41,)"
 license="MIT License"
 
 [[mods]]
@@ -7,16 +7,25 @@ modId="everydesc"
 version="1.0.0"
 displayName="Everything Descriptions"
 updateJSONURL="https://infernalstudios.org/api/mods/everythingdescriptions/forge"
-credits=""
+credits="See the description!"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/everything-descriptions"
-authors="Kuraion"
+authors="Infernal Studios"
 logoFile="logo.png"
-description=''''''
+description = '''
+Everything Descriptions allows you to add readable descriptions to any block, item or entity via resource pack!
+
+Credits
+tinytransfem - Developer
+Nekomaster1000 - Artist (Default art), Logo
+Nekomaster1000, Baconiumo, TheGameMaster, Elithris, StrangerSon712, Reetling, Sun_Dew, Cf28, Lyof - Writers (Default descriptions)
+
+Special thanks to EightBitNinja for donating on Patreon!
+'''
 
 [[dependencies.everydesc]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18,]"
+    versionRange="[1.19,]"
     ordering="NONE"
     side="BOTH"
 
