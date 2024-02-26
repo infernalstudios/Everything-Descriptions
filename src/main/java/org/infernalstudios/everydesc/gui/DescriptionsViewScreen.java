@@ -182,7 +182,7 @@ public class DescriptionsViewScreen extends Screen {
     }
 
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics);
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         int i = (this.width - 192) / 2;
         int j = 2;
         pGuiGraphics.blit(BOOK_LOCATION, i, 2, 0, 0, 192, 192);
@@ -207,7 +207,6 @@ public class DescriptionsViewScreen extends Screen {
             pGuiGraphics.renderComponentHoverEffect(this.font, style, pMouseX, pMouseY);
         }
 
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
