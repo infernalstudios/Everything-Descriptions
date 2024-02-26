@@ -4,7 +4,7 @@ license="MIT License"
 
 [[mods]]
 modId="everydesc"
-version="1.0.0"
+version="1.0.1"
 displayName="Everything Descriptions"
 updateJSONURL="https://infernalstudios.org/api/mods/everythingdescriptions/forge"
 credits="See the description!"
