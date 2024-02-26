@@ -119,7 +119,7 @@ public class DescriptionInteraction {
                 }
             }
             if (loreKey.equals("")) {
-                event.setCanceled(true);
+                //event.setCanceled(true);
                 return;
             }
 
@@ -134,7 +134,7 @@ public class DescriptionInteraction {
 
             Minecraft.getInstance().setScreen(screen);
 
-            event.setCanceled(true);
+            //event.setCanceled(true);
         }
     }
 

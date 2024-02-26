@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
@@ -115,9 +116,9 @@ public class DescriptionsViewScreen extends Screen {
     }
 
     protected void createMenuControls() {
-        this.addRenderableWidget(new Button(this.width / 2 - 100, 196, 200, 20, CommonComponents.GUI_DONE, (p_98299_) -> {
-            this.minecraft.setScreen((Screen)null);
-        }));
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (p_289629_) -> {
+            this.onClose();
+        }).bounds(this.width / 2 - 100, 196, 200, 20).build());
     }
 
     protected void createPageControlButtons() {
@@ -180,14 +181,11 @@ public class DescriptionsViewScreen extends Screen {
         }
     }
 
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pPoseStack);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, BOOK_LOCATION);
+    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(pGuiGraphics);
         int i = (this.width - 192) / 2;
         int j = 2;
-        this.blit(pPoseStack, i, 2, 0, 0, 192, 192);
+        pGuiGraphics.blit(BOOK_LOCATION, i, 2, 0, 0, 192, 192);
         if (this.cachedPage != this.currentPage) {
             FormattedText formattedtext = this.bookAccess.getPage(this.currentPage);
             this.cachedPageComponents = this.font.split(formattedtext, 114);
@@ -196,20 +194,20 @@ public class DescriptionsViewScreen extends Screen {
 
         this.cachedPage = this.currentPage;
         int i1 = this.font.width(this.pageMsg);
-        this.font.draw(pPoseStack, this.pageMsg, (float)(i - i1 + 192 - 44), 18.0F, 0);
+        pGuiGraphics.drawString(this.font, this.pageMsg, i - i1 + 192 - 44, 18, 0, false);
         int k = Math.min(128 / 9, this.cachedPageComponents.size());
 
         for(int l = 0; l < k; ++l) {
             FormattedCharSequence formattedcharsequence = this.cachedPageComponents.get(l);
-            this.font.draw(pPoseStack, formattedcharsequence, (float)(i + 36), (float)(32 + l * 9), 0);
+            pGuiGraphics.drawString(this.font, formattedcharsequence, i + 36, 32 + l * 9, 0, false);
         }
 
         Style style = this.getClickedComponentStyleAt((double)pMouseX, (double)pMouseY);
         if (style != null) {
-            this.renderComponentHoverEffect(pPoseStack, style, pMouseX, pMouseY);
+            pGuiGraphics.renderComponentHoverEffect(this.font, style, pMouseX, pMouseY);
         }
 
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
